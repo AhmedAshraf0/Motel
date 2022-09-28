@@ -121,7 +121,8 @@ class HotelCard extends StatelessWidget {
         height: 130,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16), color: backgrowndColor),
-        child: Row(//
+        child: Row(
+          //
           children: [
             ClipRRect(
               borderRadius: const BorderRadius.only(
@@ -728,14 +729,16 @@ class DefaultTextFormField extends StatelessWidget {
   IconData? sufex;
   bool textScure = false;
 
-  DefaultTextFormField(
-      {super.key,
-      required this.text,
-      required this.color,
-      required this.borderSidecolor,
-      required this.type,
-      required this.controle,
-      required this.valaditor});
+  DefaultTextFormField({
+    super.key,
+    required this.text,
+    required this.color,
+    required this.borderSidecolor,
+    required this.type,
+    required this.controle,
+    required this.valaditor,
+    this.onsubmitted,
+  });
 
   @override
   Widget build(BuildContext context) {

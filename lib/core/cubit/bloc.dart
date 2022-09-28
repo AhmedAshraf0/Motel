@@ -9,6 +9,8 @@ import 'package:motel/core/cubit/states.dart';
 import 'package:motel/core/models/hotels_model/hotels_model.dart';
 import 'package:motel/core/models/hotels_model/single_hotel_data_model.dart';
 import 'package:motel/core/models/login_model/login_model.dart';
+import 'package:motel/core/models/profile_model/profile_model.dart';
+import 'package:motel/core/models/register_model/register_model.dart';
 import 'package:motel/core/strings_manager.dart';
 import 'package:motel/features/dashBoard/data/models/banner_model.dart';
 import 'package:motel/features/dashBoard/data/models/cities.dart';
@@ -27,12 +29,15 @@ class BookingAppBloc extends Cubit<BookingAppState> {
   static BookingAppBloc get(context) =>
       BlocProvider.of<BookingAppBloc>(context);
 
+  bool networkImage = true;
   var currentIndex = 0;
   int indexIndecator = 0;
   bool isLast = false;
 
+  UserRegister? registerModel;
   LoginModel? loginModel;
   HotelsModel? hotelModel;
+  ProfileModel? profileModel;
 
   var boardController = PageController();
 
@@ -87,7 +92,7 @@ class BookingAppBloc extends Cubit<BookingAppState> {
     'assets/images/hotel6.jpg',
     'assets/images/hotel7.jpg',
   ];
-  List<SingleHotelDataModel> hotelsData = [];//all of the hotels with its data
+  List<SingleHotelDataModel> hotelsData = []; //all of the hotels with its data
   List<BannerModel> banners = [
     BannerModel(
       image: 'assets/images/hotel1.jpg',
@@ -112,9 +117,15 @@ class BookingAppBloc extends Cubit<BookingAppState> {
 
   //Tabs Title
   List<Widget> tabTitles = const [
-    Tab(text: 'Upcoming',),
-    Tab(text: 'Finished',),
-    Tab(text: 'Favorite',),
+    Tab(
+      text: 'Upcoming',
+    ),
+    Tab(
+      text: 'Finished',
+    ),
+    Tab(
+      text: 'Favorite',
+    ),
   ];
 
   isLastOnboardingScreen() {
@@ -141,12 +152,42 @@ class BookingAppBloc extends Cubit<BookingAppState> {
     ).then((value) {
       emit(SuccessLoginState());
       loginModel = LoginModel.fromJson(value.data);
-      getHotels(count: 7, page: 1);//Logged in so let's get the hotels
-      navigateAndFinish(context, DashBoardScreen());
+      debugPrint(value.data.toString());
+      if (loginModel!.status!.type == '1') {
+        getHotels(count: 7, page: 1); //Logged in so let's get the hotels
+        navigateAndFinish(context, DashBoardScreen());
+      }
+      SuccessLoginState.apiStatus = loginModel!.status!.type;
     }).catchError((e) {
       emit(ErrorLoginState());
       printFullText(
           '---------------Error In Login-----------------\n' + e.toString());
+    });
+  }
+
+  void registerFunction({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String password,
+  }) {
+    emit(LoadingRegisterState());
+    DioHelper.postData(
+      path: register,
+      data: {
+        'name': '$firstName $lastName',
+        'email': email,
+        'password': password,
+        'password_confirmation': password
+      },
+      useHeader: false,
+    ).then((value) {
+      registerModel = UserRegister.fromJson(value.data);
+      emit(SuccessRegisterState());
+      SuccessRegisterState.apiStatus = registerModel!.status!.type;
+    }).catchError((e) {
+      emit(ErrorRegisterState());
+      debugPrint('----------Error in Regiser-----------\n${e.toString()}');
     });
   }
 
@@ -185,10 +226,34 @@ class BookingAppBloc extends Cubit<BookingAppState> {
     });
   }
 
+  void profileData({required String token}) {
+    emit(LoadingProfileData()) ;
+    DioHelper.getData(
+      path: profileInfo,
+      queries: null,
+      useHeader: true,
+      key: token,
+    ).then((value) {
+      profileModel = ProfileModel.fromJson(value.data);
+      emit(SuccessProfileData());
+      if(profileModel?.data?.image == null || (profileModel!.data!.image!.indexOf('images') == 27 && profileModel!.data!.image!.length <= 33)){
+        profileModel?.data?.image = 'assets/images/dp1.png';
+        networkImage = false;
+      }
+    }).catchError((e){
+      emit(ErrorProfileData());
+      debugPrint('----------Error in profieData-----------\n${e.toString()}');
+    });
+  }
+
   onTap(int index) {
     emit(MainLoadingBottomNavigationBarState());
 
     currentIndex = index;
+
+    if (currentIndex == 2) {
+      profileData(token: loginModel!.data!.token!);
+    }
     emit(MainChangeBottomNavigationBarState());
   }
 

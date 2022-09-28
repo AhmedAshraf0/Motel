@@ -5,6 +5,7 @@ import 'package:motel/core/cubit/bloc.dart';
 import 'package:motel/core/strings_manager.dart';
 import 'package:motel/features/loginScreen/login_screen.dart';
 import 'package:motel/features/onboarding/presentation/widgets/build_boarding_item.dart';
+import 'package:motel/features/signUpScreen/signup_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 Padding onboardingBody(BuildContext context) {
@@ -71,7 +72,7 @@ Padding onboardingBody(BuildContext context) {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: DefaultButton(
             onPressed: () {
-              navigateAndFinish(context, Container());
+              navigateTo(context, SignupScreen());
             },
             text: AppStrings.createAccount,
             isUpperCase: true,
