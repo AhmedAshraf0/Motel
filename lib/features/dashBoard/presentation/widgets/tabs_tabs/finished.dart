@@ -21,18 +21,18 @@ class Finished extends StatelessWidget {
         }else{
           return ListView.builder(
               scrollDirection: Axis.vertical,
-              itemCount: BookingAppBloc.get(context).getBookingModelCompleted!.data.length,
+              itemCount: 3,
               itemBuilder: (context, index) {
                 return index % 2 == 0
                     ? Column(
                   children: [
                     FinishedCardLeft(
-                      imageURL:BookingAppBloc.get(context).imgLinks[index],
-                      distance: BookingAppBloc.get(context).getBookingModelCompleted!.data[index].hotelDataModel!.address!,
-                      hotelName: BookingAppBloc.get(context).getBookingModelCompleted!.data[index].hotelDataModel!.name!,
+                      imageURL:BookingAppBloc.get(context).imgLinks[BookingAppBloc.get(context).hotelModel!.hotelsDataModel!.hotels[4+index].id!-18],
+                      distance: BookingAppBloc.get(context).hotelModel!.hotelsDataModel!.hotels[4+index].address!,
+                      hotelName: BookingAppBloc.get(context).hotelModel!.hotelsDataModel!.hotels[4+index].name!,
                       location: 'Hurghada, Egypt',
-                      price: BookingAppBloc.get(context).getBookingModelCompleted!.data[index].hotelDataModel!.price!,
-                      rate: double.parse(BookingAppBloc.get(context).getBookingModelCompleted!.data[index].hotelDataModel!.rate!),
+                      price: BookingAppBloc.get(context).hotelModel!.hotelsDataModel!.hotels[4+index].price!,
+                      rate: double.parse(BookingAppBloc.get(context).hotelModel!.hotelsDataModel!.hotels[4+index].rate!),
                       date: '01 sep - 05 Sep,1 Room 2 People',
                     ),
                     SizedBox(
@@ -43,12 +43,12 @@ class Finished extends StatelessWidget {
                     : Column(
                   children: [
                     FinishedCardRight(
-                      imageURL:BookingAppBloc.get(context).imgLinks[index],
-                      distance: BookingAppBloc.get(context).getBookingModelCompleted!.data[index].hotelDataModel!.address!,
-                      hotelName: BookingAppBloc.get(context).getBookingModelCompleted!.data[index].hotelDataModel!.name!,
+                      imageURL:BookingAppBloc.get(context).imgLinks[BookingAppBloc.get(context).hotelModel!.hotelsDataModel!.hotels[4+index].id!-18],
+                      distance: BookingAppBloc.get(context).hotelModel!.hotelsDataModel!.hotels[4+index].address!,
+                      hotelName: BookingAppBloc.get(context).hotelModel!.hotelsDataModel!.hotels[4+index].name!,
                       location: 'Hurghada, Egypt',
-                      price: BookingAppBloc.get(context).getBookingModelCompleted!.data[index].hotelDataModel!.price!,
-                      rate: double.parse(BookingAppBloc.get(context).getBookingModelCompleted!.data[index].hotelDataModel!.rate!),
+                      price: BookingAppBloc.get(context).hotelModel!.hotelsDataModel!.hotels[4+index].price!,
+                      rate: double.parse(BookingAppBloc.get(context).hotelModel!.hotelsDataModel!.hotels[4+index].rate!),
                       date: '01 sep - 05 Sep,1 Room 2 People',
                     ),
                     SizedBox(

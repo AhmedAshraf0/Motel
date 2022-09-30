@@ -168,12 +168,19 @@ class _SearchScreenState extends State<SearchScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                Text(
-                  '${BookingAppBloc.get(context).searchList.length.toString()} Hotel Found',
-                  style: TextStyle(
-                    color: Colors.black26,
-                    fontSize: 15,
-                  ),
+                BlocConsumer<BookingAppBloc, BookingAppState>(
+                  listener: (context, state) {
+                    // TODO: implement listener
+                  },
+                  builder: (context, state) {
+                    return Text(
+                      '${BookingAppBloc.get(context).searchList.length.toString()} Hotel Found',
+                      style: TextStyle(
+                        color: Colors.black26,
+                        fontSize: 15,
+                      ),
+                    );
+                  },
                 ),
                 const Spacer(
                   flex: 1,
@@ -234,9 +241,18 @@ class _SearchScreenState extends State<SearchScreen> {
                             currentKM += ' km to airport';
 
                             return GestureDetector(
-                              onTap: (){
-                                navigateTo(context, HotelPage(hotelListIndex: BookingAppBloc.get(context)
-                                    .searchList[index].id!-18,distance: currentKM,indexOfHotel: index,));
+                              onTap: () {
+                                navigateTo(
+                                    context,
+                                    HotelPage(
+                                      hotelListIndex:
+                                          BookingAppBloc.get(context)
+                                                  .searchList[index]
+                                                  .id! -
+                                              18,
+                                      distance: currentKM,
+                                      indexOfHotel: index,
+                                    ));
                               },
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -250,7 +266,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                       width: 350,
                                       height: 290,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20.0),
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.grey.withOpacity(0.1),
@@ -275,7 +292,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 image: AssetImage(
                                                   BookingAppBloc.get(context)
                                                           .imgLinks[
-                                                      BookingAppBloc.get(context)
+                                                      BookingAppBloc.get(
+                                                                  context)
                                                               .searchList[index]
                                                               .id! -
                                                           18],
@@ -316,7 +334,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 horizontal: 8),
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Expanded(
                                                   child: Text(
@@ -335,7 +354,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 Text(
                                                   '\$${BookingAppBloc.get(context).searchList[index].price!}',
                                                   style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 24,
                                                       color: Colors.black),
                                                 ),
@@ -347,7 +367,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 horizontal: 8),
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Row(
                                                   children: [
@@ -396,8 +417,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   direction: Axis.horizontal,
                                                   itemCount: 5,
                                                   itemSize: 16,
-                                                  itemPadding:
-                                                      const EdgeInsets.symmetric(
+                                                  itemPadding: const EdgeInsets
+                                                      .symmetric(
                                                     horizontal: 2.0,
                                                   ),
                                                   itemBuilder: (context, _) =>
