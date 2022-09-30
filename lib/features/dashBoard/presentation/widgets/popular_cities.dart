@@ -39,9 +39,7 @@ class PopularCities extends StatelessWidget {
                               imageURL: BookingAppBloc.get(context)
                                   .cities[index]
                                   .image,
-                              cityName: BookingAppBloc.get(context)
-                                  .cities[index]
-                                  .title),
+                              cityName: 'Egypt'),
                         ],
                       );
                     }),

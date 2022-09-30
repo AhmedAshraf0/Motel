@@ -4,6 +4,7 @@ import 'package:motel/core/models/hotels_model/hotel_images_model.dart';
 
 class SingleHotelDataModel {
   int? id;
+  bool? like = false;
   String? name,
       description,
       price,

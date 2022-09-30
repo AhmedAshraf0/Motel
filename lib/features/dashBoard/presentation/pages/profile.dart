@@ -5,28 +5,20 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:motel/core/componant.dart';
 import 'package:motel/core/cubit/bloc.dart';
 import 'package:motel/core/cubit/states.dart';
+import 'package:motel/core/strings_manager.dart';
 import 'package:motel/features/changePassword/chanage_password_screen.dart';
 import 'package:motel/features/settingScreen/setting_screen.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  ProfilePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    ImageProvider<Object>? imageSwitch;
     return BlocConsumer<BookingAppBloc, BookingAppState>(
-      listener: (context, state) {
-        if(state is SuccessProfileData){
-          if(BookingAppBloc.get(context).networkImage){
-            imageSwitch = NetworkImage(BookingAppBloc.get(context).profileModel!.data!.image!);
-          }else{
-            imageSwitch = AssetImage(BookingAppBloc.get(context).profileModel!.data!.image!);
-          }
-        }
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         return ConditionalBuilder(
-          condition:  BookingAppBloc.get(context).profileModel == null,
+          condition: BookingAppBloc.get(context).profileModel == null,
           builder: (context) => const Center(
             child: CircularProgressIndicator(
               color: Colors.greenAccent,
@@ -65,14 +57,15 @@ class ProfilePage extends StatelessWidget {
                                       fontWeight: FontWeight.w500)),
                         ],
                       ),
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(right: 10),
                         child: CircleAvatar(
                           radius: 42,
                           backgroundColor: Colors.black54,
                           child: CircleAvatar(
                             radius: 40,
-                            backgroundImage: AssetImage('assets/images/dp1.png'),
+                            backgroundImage:
+                                NetworkImage(BookingAppBloc.get(context).profileModel!.data!.image!),
                           ),
                         ),
                       ),

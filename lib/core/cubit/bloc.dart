@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:motel/core/api/dio_helper.dart';
@@ -6,6 +8,9 @@ import 'package:motel/core/componant.dart';
 import 'package:motel/core/constants/constants.dart';
 import 'package:motel/core/constants/endPoints.dart';
 import 'package:motel/core/cubit/states.dart';
+import 'package:motel/core/models/create_booking_model/create_booking_model.dart';
+import 'package:motel/core/models/facilities_model/facilities_model.dart';
+import 'package:motel/core/models/get_bookings_model/get_bookings_model.dart';
 import 'package:motel/core/models/hotels_model/hotels_model.dart';
 import 'package:motel/core/models/hotels_model/single_hotel_data_model.dart';
 import 'package:motel/core/models/login_model/login_model.dart';
@@ -29,17 +34,43 @@ class BookingAppBloc extends Cubit<BookingAppState> {
   static BookingAppBloc get(context) =>
       BlocProvider.of<BookingAppBloc>(context);
 
-  bool networkImage = true;
   var currentIndex = 0;
   int indexIndecator = 0;
-  bool isLast = false;
+  bool isLast = false , yub = false;
+  TextEditingController textEditingController = TextEditingController();
 
   UserRegister? registerModel;
   LoginModel? loginModel;
-  HotelsModel? hotelModel;
+  HotelsModel? hotelModel, searchModel;
   ProfileModel? profileModel;
+  GetBookingModel? getBookingModelUpcoming,
+      getBookingModelCancelled,
+      getBookingModelCompleted;
+  CreateBooking? createBookingModel;
+  FacilitiesSearchModel? facilitiesModel;
 
   var boardController = PageController();
+
+  Map<String, dynamic> searchQueries = {
+    'count': 10,
+    'page': 1,
+  };
+
+  Map<String,int> facilitiesMap = {};
+
+  List<int> randomNums = [
+    Random().nextInt(12) + 1,
+    Random().nextInt(12) + 1,
+    Random().nextInt(12) + 1,
+    Random().nextInt(12) + 1,
+    Random().nextInt(12) + 1,
+    Random().nextInt(12) + 1,
+    Random().nextInt(12) + 1,
+    Random().nextInt(12) + 1,
+    Random().nextInt(12) + 1,
+    Random().nextInt(12) + 1,
+    Random().nextInt(12) + 1,
+  ];
 
   List<BoardingModel> boarding = [
     BoardingModel(
@@ -92,7 +123,7 @@ class BookingAppBloc extends Cubit<BookingAppState> {
     'assets/images/hotel6.jpg',
     'assets/images/hotel7.jpg',
   ];
-  List<SingleHotelDataModel> hotelsData = []; //all of the hotels with its data
+  List<SingleHotelDataModel> hotelsData = [] , favoritesData = []; //all of the hotels with its data
   List<BannerModel> banners = [
     BannerModel(
       image: 'assets/images/hotel1.jpg',
@@ -113,7 +144,7 @@ class BookingAppBloc extends Cubit<BookingAppState> {
 
   List<CitiesModel> cities = [];
 
-  List<Widget> screens = const [Upcoming(), Finished(), Favorite()];
+  List<Widget> screens = [Upcoming(), Finished(), Favorite()];
 
   //Tabs Title
   List<Widget> tabTitles = const [
@@ -127,6 +158,8 @@ class BookingAppBloc extends Cubit<BookingAppState> {
       text: 'Favorite',
     ),
   ];
+
+  List<SingleHotelDataModel> searchList = [];
 
   isLastOnboardingScreen() {
     isLast = true;
@@ -152,7 +185,6 @@ class BookingAppBloc extends Cubit<BookingAppState> {
     ).then((value) {
       emit(SuccessLoginState());
       loginModel = LoginModel.fromJson(value.data);
-      debugPrint(value.data.toString());
       if (loginModel!.status!.type == '1') {
         getHotels(count: 7, page: 1); //Logged in so let's get the hotels
         navigateAndFinish(context, DashBoardScreen());
@@ -202,8 +234,8 @@ class BookingAppBloc extends Cubit<BookingAppState> {
       useHeader: false,
     ).then((value) {
       hotelModel = HotelsModel.fromJson(value.data);
-      hotelsData = hotelModel!.hotelsDataModel!
-          .hotels; //saving the hotels in a list here in the bloc
+      hotelsData = hotelModel!.hotelsDataModel!.hotels; //saving the hotels in a list here in the bloc
+      // favoritesData = hotelModel!.hotelsDataModel!.hotels;
       cities = [
         CitiesModel(
           image: 'assets/images/hotel4.jpg',
@@ -227,7 +259,7 @@ class BookingAppBloc extends Cubit<BookingAppState> {
   }
 
   void profileData({required String token}) {
-    emit(LoadingProfileData()) ;
+    emit(LoadingProfileDataState());
     DioHelper.getData(
       path: profileInfo,
       queries: null,
@@ -235,14 +267,133 @@ class BookingAppBloc extends Cubit<BookingAppState> {
       key: token,
     ).then((value) {
       profileModel = ProfileModel.fromJson(value.data);
-      emit(SuccessProfileData());
-      if(profileModel?.data?.image == null || (profileModel!.data!.image!.indexOf('images') == 27 && profileModel!.data!.image!.length <= 33)){
-        profileModel?.data?.image = 'assets/images/dp1.png';
-        networkImage = false;
+      printFullText(value.data.toString());
+      emit(SuccessProfileDataState());
+      if (profileModel?.data?.image == null ||
+          (profileModel!.data!.image!.indexOf('images') == 27 &&
+              profileModel!.data!.image!.length <= 33)) {
+        profileModel?.data?.image =
+            'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg';
+      } else {
+        // profileModel!.data!.image = AppStrings.imageApi + profileModel!.data!.image!;
       }
-    }).catchError((e){
-      emit(ErrorProfileData());
+    }).catchError((e) {
+      emit(ErrorProfileDataState());
       debugPrint('----------Error in profieData-----------\n${e.toString()}');
+    });
+  }
+
+  void getBookingUpcoming({
+    required String token,
+    required int count,
+  }) {
+    emit(LoadingBookingUpcomingDataState());
+    DioHelper.getData(
+      path: getBookings,
+      queries: {'type': AppStrings.upcomming, 'count': count},
+      useHeader: true,
+      key: token,
+    ).then((value) {
+      getBookingModelUpcoming = GetBookingModel.fromJson(value.data);
+      emit(SuccessBookingUpcomingDataState());
+    }).catchError((e) {
+      emit(ErrorBookingUpcomingDataState());
+      debugPrint(
+          '----------Error in getting Upcoming Bookings-----------\n${e.toString()}');
+    });
+  }
+
+  void getBookingCancelled({
+    required String token,
+    required int count,
+  }) {
+    emit(LoadingBookingCancelledDataState());
+    DioHelper.getData(
+      path: getBookings,
+      queries: {'type': AppStrings.cancelled, 'count': count},
+      useHeader: true,
+      key: token,
+    ).then((value) {
+      getBookingModelCancelled = GetBookingModel.fromJson(value.data);
+      emit(SuccessBookingCancelledDataState());
+    }).catchError((e) {
+      emit(ErrorBookingCancelledDataState());
+      debugPrint(
+          '----------Error in getting Cancelled Bookings-----------\n${e.toString()}');
+    });
+  }
+
+  void getBookingCompledted({
+    required String token,
+    required int count,
+  }) {
+    emit(LoadingBookingCompletedDataState());
+    DioHelper.getData(
+      path: getBookings,
+      queries: {'type': AppStrings.completed, 'count': count},
+      useHeader: true,
+      key: token,
+    ).then((value) {
+      getBookingModelCompleted = GetBookingModel.fromJson(value.data);
+      emit(SuccessBookingCompletedDataState());
+    }).catchError((e) {
+      emit(ErrorBookingCompletedDataState());
+      debugPrint(
+          '----------Error in getting Completed Bookings-----------\n${e.toString()}');
+    });
+  }
+
+  void createHotelBooking({required String token, required int hotelId}) {
+    emit(LoadingCreatingBookingState());
+    DioHelper.postData(
+      path: createBooking,
+      data: {'hotel_id': hotelId},
+      useHeader: true,
+      key: token,
+    ).then((value) {
+      createBookingModel = CreateBooking.fromJson(value.data);
+      emit(SuccessCreatingBookingState());
+    }).catchError((e) {
+      debugPrint(
+          '----------Error in creating hotel booking-----------\n${e.toString()}');
+      emit(ErrorCreatingBookingState());
+    });
+  }
+
+  void searchForHotels() {
+    emit(LoadingSearchForHotelsState());
+    DioHelper.getData(
+      path: searchHotels,
+      queries: searchQueries,
+      useHeader: false,
+    ).then((value) {
+      searchModel = HotelsModel.fromJson(value.data);
+      printFullText(value.data.toString());
+      searchList = searchModel!.hotelsDataModel!.hotels;
+      emit(SuccessSearchForHotelsState());
+    }).catchError((e) {
+      emit(ErrorSearchForHotelsState());
+      debugPrint(
+          '----------Error in search for hotels-----------\n${e.toString()}');
+    });
+  }
+
+  void getFacilities() {
+    emit(LoadingFacilitiesState());
+    DioHelper.getData(
+      path: searchFacilities,
+      queries: null,
+      useHeader: false,
+    ).then((value) {
+      facilitiesModel = FacilitiesSearchModel.fromJson(value.data);
+      emit(SuccessFacilitiesState());
+      for(int i = 0 ; i < facilitiesModel!.data!.length ; ++i){
+        facilitiesMap[facilitiesModel!.data![i].name!] = facilitiesModel!.data![i].id!;
+      }
+    }).catchError((e) {
+      debugPrint(
+          '----------Error in Getting features-----------\n${e.toString()}');
+      emit(ErrorFacilitiesState());
     });
   }
 
@@ -253,6 +404,13 @@ class BookingAppBloc extends Cubit<BookingAppState> {
 
     if (currentIndex == 2) {
       profileData(token: loginModel!.data!.token!);
+    } else if (currentIndex == 1) {
+      getBookingUpcoming(token: loginModel!.data!.token!, count: 10);
+      getBookingCompledted(token: loginModel!.data!.token!, count: 10);
+    }
+    if (currentIndex == 2 || currentIndex == 0) {
+      getBookingModelCompleted = null;
+      getBookingModelUpcoming = null;
     }
     emit(MainChangeBottomNavigationBarState());
   }

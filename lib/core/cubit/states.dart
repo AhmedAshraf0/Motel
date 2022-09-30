@@ -43,8 +43,46 @@ class SuccessHotelsDataState extends BookingAppState{}
 
 class ErrorHotelsDataState extends BookingAppState{}
 
-class LoadingProfileData extends BookingAppState{}
+class LoadingProfileDataState extends BookingAppState{}
 
-class SuccessProfileData extends BookingAppState{}
+class SuccessProfileDataState extends BookingAppState{}
 
-class ErrorProfileData extends BookingAppState{}
+class ErrorProfileDataState extends BookingAppState{}
+
+class LoadingBookingUpcomingDataState extends BookingAppState{}
+
+class SuccessBookingUpcomingDataState extends BookingAppState{}
+
+class ErrorBookingUpcomingDataState extends BookingAppState{}
+
+class LoadingBookingCancelledDataState extends BookingAppState{}
+
+class SuccessBookingCancelledDataState extends BookingAppState{}
+
+class ErrorBookingCancelledDataState extends BookingAppState{}
+
+class LoadingBookingCompletedDataState extends BookingAppState{}
+
+class SuccessBookingCompletedDataState extends BookingAppState{}
+
+class ErrorBookingCompletedDataState extends BookingAppState{}
+
+class LoadingCreatingBookingState extends BookingAppState{}
+
+class SuccessCreatingBookingState extends BookingAppState{}
+
+class ErrorCreatingBookingState extends BookingAppState{}
+
+class LoadingSearchForHotelsState extends BookingAppState{}
+
+class SuccessSearchForHotelsState extends BookingAppState{}
+
+class ErrorSearchForHotelsState extends BookingAppState{}
+
+class LoadingFacilitiesState extends BookingAppState{}
+
+class SuccessFacilitiesState extends BookingAppState{}
+
+class ErrorFacilitiesState extends BookingAppState{}
+
+class ChangeIconState extends BookingAppState{}

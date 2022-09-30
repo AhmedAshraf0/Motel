@@ -22,4 +22,7 @@ class ColorManager {
   static Color darkPrimary = const Color(0xff167C8D);
   static Color lightPrimary = const Color(0xCC1C9A8F); // color with 80% opacity
   static Color grey1 = const Color(0xff707070);
+  static const Color error = Color(0xffe61f34);
+  static const Color secondry = Color(0xff2c2c2c);
+
 }

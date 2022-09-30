@@ -117,10 +117,20 @@ class HotelCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Container(
-        width: double.infinity,
-        height: 130,
+        // width: double.infinity,
+        height: 110,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16), color: backgrowndColor),
+          borderRadius: BorderRadius.circular(16),
+          color: backgrowndColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 3,
+              blurRadius: 7,
+              offset: const Offset(0,3),
+            ),
+          ],
+        ),
         child: Row(
           //
           children: [
@@ -131,12 +141,12 @@ class HotelCard extends StatelessWidget {
               child: Image.asset(
                 imageURL,
                 fit: BoxFit.cover,
-                width: 120,
-                height: 130,
+                width: 108,
+                height: 120,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(2),
+              padding: const EdgeInsets.all(8),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,14 +154,24 @@ class HotelCard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        hotelName!,
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                      Container(
+                        width: 170,
+                        child: Text(
+                          hotelName!,
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
                       ),
-                      Text(
-                        location!,
-                        style: const TextStyle(color: Colors.grey),
+                      Container(
+                        width: 160,
+                        child: Text(
+                          location!,
+                          maxLines: 2,
+                          softWrap: true,
+                          style: const TextStyle(color: Colors.grey),
+                        ),
                       ),
                     ],
                   ),
@@ -161,19 +181,28 @@ class HotelCard extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const Icon(
-                                Icons.location_pin,
-                                size: 16,
-                                color: ColorManager.primary,
-                              ),
-                              Text(
-                                distance!,
-                                style: const TextStyle(color: Colors.grey),
-                              ),
-                            ],
+                          Container(
+                            width: 106,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Icons.location_pin,
+                                  size: 16,
+                                  color: ColorManager.primary,
+                                ),
+                                Container(
+                                  width: 86,
+                                  child: Text(
+                                    distance!,
+                                    maxLines: 1,
+                                    softWrap: true,
+                                    style: const TextStyle(
+                                        color: Colors.grey, fontSize: 12),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           RatingBarIndicator(
                             direction: Axis.horizontal,
@@ -256,20 +285,32 @@ class FinishedCardLeft extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                hotelName,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              Container(
+                width: 140,
+                child: Text(
+                  maxLines: 1,
+                  hotelName,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Container(
+                width: 100,
+                child: Text(
+                  maxLines: 1,
+                  location,
+                  style: const TextStyle(color: Colors.grey),
+                ),
               ),
               Text(
-                location,
-                style: const TextStyle(color: Colors.grey),
-              ),
-              Text(
+                maxLines: 1,
+                textAlign: TextAlign.left,
                 date.split(',')[0],
                 style: TextStyle(fontSize: 12),
               ),
               Text(
+                maxLines: 1,
+                textAlign: TextAlign.left,
                 date.split(',')[1],
                 style: TextStyle(fontSize: 12),
               ),
@@ -281,9 +322,13 @@ class FinishedCardLeft extends StatelessWidget {
                     size: 18,
                     color: ColorManager.primary,
                   ),
-                  Text(
-                    distance,
-                    style: const TextStyle(color: Colors.grey, fontSize: 16),
+                  Container(
+                    width: 110,
+                    child: Text(
+                      maxLines: 1,
+                      distance,
+                      style: const TextStyle(color: Colors.grey, fontSize: 16),
+                    ),
                   ),
                 ],
               ),
@@ -349,21 +394,33 @@ class FinishedCardRight extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                hotelName,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              Container(
+                width: 140,
+                child: Text(
+                  maxLines: 1,
+                  textAlign: TextAlign.right,
+                  hotelName,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                ),
               ),
-              Text(
-                location,
-                style: const TextStyle(color: Colors.grey),
+              Container(
+                width: 130,
+                child: Text(
+                  maxLines: 1,
+                  textAlign: TextAlign.right,
+                  location,
+                  style: const TextStyle(color: Colors.grey),
+                ),
               ),
               Text(
                 date.split(',')[0],
+                textAlign: TextAlign.right,
                 style: TextStyle(fontSize: 12),
               ),
               Text(
                 date.split(',')[1],
+                textAlign: TextAlign.right,
                 style: TextStyle(fontSize: 12),
               ),
               Row(
@@ -374,9 +431,13 @@ class FinishedCardRight extends StatelessWidget {
                     size: 18,
                     color: ColorManager.primary,
                   ),
-                  Text(
-                    distance,
-                    style: const TextStyle(color: Colors.grey, fontSize: 16),
+                  Container(
+                    width: 110,
+                    child: Text(
+                      maxLines: 1,
+                      distance,
+                      style: const TextStyle(color: Colors.grey, fontSize: 16),
+                    ),
                   ),
                 ],
               ),
@@ -395,7 +456,7 @@ class FinishedCardRight extends StatelessWidget {
                 children: [
                   Text(
                     '\$$price',
-                    textAlign: TextAlign.end,
+                    textAlign: TextAlign.right,
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold),
                   ),
@@ -426,6 +487,7 @@ class FinishedCardRight extends StatelessWidget {
 }
 
 class UpcomingCard extends StatelessWidget {
+  bool like;
   String imageURL;
   String hotelName;
   String location;
@@ -445,7 +507,7 @@ class UpcomingCard extends StatelessWidget {
       required this.rate,
       required this.offerdate,
       required this.reviews,
-      this.backgrowndColor = Colors.white70});
+      this.backgrowndColor = Colors.white70,required this.like});
 
   @override
   Widget build(BuildContext context) {
@@ -497,13 +559,16 @@ class UpcomingCard extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Stack(
                         alignment: AlignmentDirectional.topEnd,
-                        children: const [
+                        children: [
                           CircleAvatar(
                               backgroundColor: ColorManager.white,
-                              child: Icon(
+                              child: !like ? Icon(
                                 Icons.favorite_border,
                                 color: ColorManager.primary,
-                              ))
+                              ):Icon(
+                                Icons.favorite,
+                                color: ColorManager.primary,
+                              ),)
                         ]),
                   ),
                 ),
@@ -516,10 +581,14 @@ class UpcomingCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            hotelName,
-                            style: const TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold),
+                          Container(
+                            width: 232,
+                            child: Text(
+                              maxLines: 1,
+                              hotelName,
+                              style: const TextStyle(
+                                  fontSize: 23, fontWeight: FontWeight.bold),
+                            ),
                           ),
                           Text(
                             '\$$price',
@@ -540,7 +609,7 @@ class UpcomingCard extends StatelessWidget {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: '$location',
+                                    text: 'Hurghada, Egypt',
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   const WidgetSpan(
@@ -876,6 +945,91 @@ class DefaultButtomIcon extends StatelessWidget {
     );
   }
 }
+
+class DefaultButtom extends StatelessWidget {
+  final String text;
+  final double size;
+  final Color color;
+  final Color coloricon;
+  final IconData icon;
+  final Color colortext;
+
+  const DefaultButtom({
+    Key? key,
+    required this.text,
+    required this.color,
+    required this.size,
+    required this.colortext,
+    required this.coloricon,
+    required this.icon,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 45,
+      width: 150,
+      decoration:
+      BoxDecoration(color: color, borderRadius: BorderRadius.circular(25)),
+      child: MaterialButton(
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text(
+            text,
+            style: TextStyle(color: colortext, fontSize: size),
+          ),
+          Icon(icon, color: coloricon, size: 28),
+        ]),
+        onPressed: () {},
+        elevation: 8,
+      ),
+    );
+  }
+}
+
+class MainButton extends StatelessWidget {
+  MainButton({
+    Key? key,
+    required this.text,
+    this.backgroundColor = ColorManager.primary,
+    this.foregroundColor = ColorManager.white,
+    this.horizontalPadding = 0,
+    this.width = double.infinity,
+    required this.function,
+  });
+
+  final String text;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final double horizontalPadding;
+  final double? width;
+  VoidCallback? function;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      child: SizedBox(
+        width: width,
+        height: 50,
+        child: ElevatedButton(
+          onPressed: function,
+          style: ElevatedButton.styleFrom(
+            foregroundColor: foregroundColor,
+            backgroundColor: backgroundColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+            elevation: 0,
+          ),
+          child: Text(
+            text,
+            style: const TextStyle(fontSize: 16),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 
 void toastMsg({required String msg, required Color color}) {
   Fluttertoast.showToast(

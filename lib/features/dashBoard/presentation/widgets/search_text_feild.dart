@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:motel/core/color_manager.dart';
+import 'package:motel/core/componant.dart';
 import 'package:motel/core/strings_manager.dart';
+import 'package:motel/features/searchScreen/search_screen.dart';
 
 class SearchTextField extends StatelessWidget {
   const SearchTextField({
@@ -15,7 +17,7 @@ class SearchTextField extends StatelessWidget {
       child: TextField(
         readOnly: true,
         onTap: () {
-          // navigateTo(context, Home());
+          navigateTo(context, SearchScreen());
         },
         decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0),

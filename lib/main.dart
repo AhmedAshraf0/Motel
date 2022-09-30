@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => BookingAppBloc(),
+      create: (context) => BookingAppBloc()..getFacilities(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'MOTEL',

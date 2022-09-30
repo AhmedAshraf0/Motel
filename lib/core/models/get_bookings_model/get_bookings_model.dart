@@ -9,6 +9,7 @@ class GetBookingModel{
   List<BookingsDataClass> data = [];
   String? firstPageUrl , lastPageUrl , nextPageUrl;
   List<LinksModel> links = [];
+
   GetBookingModel.fromJson(Map<String,dynamic>json){
     List<dynamic> hotelsData = json['data']['data'];
     List<dynamic> hotelsLinks = json['data']['links'];

@@ -28,4 +28,10 @@ class AppStrings {
   static const String textSignup2 = '  Services and privacy policy ';
   static const String textSignup3 = '  Already have account ?  ';
   static const String forgotText = 'Enter your email to receive an email to reset your passwored';
+
+  static const String imageApi = 'http://api.mahmoudtaha.com/images/';
+  static const String defaultImage = 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg';
+  static const String upcomming = 'upcomming';
+  static const String cancelled = 'cancelled';
+  static const String completed = 'completed';
 }

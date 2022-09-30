@@ -6,6 +6,8 @@ import 'package:motel/core/componant.dart';
 import 'package:motel/core/cubit/bloc.dart';
 import 'package:motel/core/cubit/states.dart';
 import 'package:motel/features/dashBoard/presentation/widgets/search_text_feild.dart';
+import 'package:motel/features/filterScreen/filteer_sctreen.dart';
+import 'package:motel/features/searchScreen/search_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeBanner extends StatelessWidget {
@@ -82,7 +84,7 @@ class HomeBanner extends StatelessWidget {
                   Container(
                       padding: EdgeInsets.only(left: 20, right: 10, bottom: 10),
                       child: DefaultButton(
-                        onPressed: () => navigateTo(context, Container()),
+                        onPressed: () => navigateTo(context, SearchScreen()),
                         text: 'View Hotel',
                         radius: 30,
                         textSize: 16,

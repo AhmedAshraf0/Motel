@@ -4,6 +4,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:motel/core/componant.dart';
 import 'package:motel/core/cubit/bloc.dart';
 import 'package:motel/core/cubit/states.dart';
+import 'package:motel/features/NoDataScreen/noDataScreen.dart';
 
 class Finished extends StatelessWidget {
   const Finished({super.key});
@@ -15,46 +16,48 @@ class Finished extends StatelessWidget {
         // TODO: implement listener
       },
       builder: (context, state) {
-        return ListView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: 7,
-            itemBuilder: (context, index) {
-              return index % 2 == 0
-                  ? Column(
-                children: [
-                  FinishedCardLeft(
-                    imageURL:
-                    'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768s',
-                    distance: '70 km to city',
-                    hotelName: 'Queen Hotel',
-                    location: 'Wembley, London',
-                    price: '60',
-                    rate: 4.5,
-                    date: '01 sep - 05 Sep, 1 Room 2 People',
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                ],
-              )
-                  : Column(
-                children: [
-                  FinishedCardRight(
-                    imageURL:
-                    'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768s',
-                    distance: '70 km to city',
-                    hotelName: 'Queen Hotel',
-                    location: 'Wembley, London',
-                    price: '60',
-                    rate: 4.5,
-                    date: '01 sep - 05 Sep, 1 Room 2 People',
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                ],
-              );
-            });
+        if(BookingAppBloc.get(context).getBookingModelCompleted!.status!.type == '0'){
+          return NoDataScreen();
+        }else{
+          return ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: BookingAppBloc.get(context).getBookingModelCompleted!.data.length,
+              itemBuilder: (context, index) {
+                return index % 2 == 0
+                    ? Column(
+                  children: [
+                    FinishedCardLeft(
+                      imageURL:BookingAppBloc.get(context).imgLinks[index],
+                      distance: BookingAppBloc.get(context).getBookingModelCompleted!.data[index].hotelDataModel!.address!,
+                      hotelName: BookingAppBloc.get(context).getBookingModelCompleted!.data[index].hotelDataModel!.name!,
+                      location: 'Hurghada, Egypt',
+                      price: BookingAppBloc.get(context).getBookingModelCompleted!.data[index].hotelDataModel!.price!,
+                      rate: double.parse(BookingAppBloc.get(context).getBookingModelCompleted!.data[index].hotelDataModel!.rate!),
+                      date: '01 sep - 05 Sep,1 Room 2 People',
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                  ],
+                )
+                    : Column(
+                  children: [
+                    FinishedCardRight(
+                      imageURL:BookingAppBloc.get(context).imgLinks[index],
+                      distance: BookingAppBloc.get(context).getBookingModelCompleted!.data[index].hotelDataModel!.address!,
+                      hotelName: BookingAppBloc.get(context).getBookingModelCompleted!.data[index].hotelDataModel!.name!,
+                      location: 'Hurghada, Egypt',
+                      price: BookingAppBloc.get(context).getBookingModelCompleted!.data[index].hotelDataModel!.price!,
+                      rate: double.parse(BookingAppBloc.get(context).getBookingModelCompleted!.data[index].hotelDataModel!.rate!),
+                      date: '01 sep - 05 Sep,1 Room 2 People',
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                  ],
+                );
+              });
+        }
       },
     );
   }

@@ -1,34 +1,52 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:motel/core/color_manager.dart';
 import 'package:motel/core/cubit/bloc.dart';
 import 'package:motel/core/cubit/states.dart';
+import 'package:motel/core/strings_manager.dart';
 
 class TripsPage extends StatelessWidget {
   TripsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    BookingAppBloc.get(context).favoritesData = [];
+    for (int i = 0; i < BookingAppBloc.get(context).hotelsData.length; ++i) {
+      if (BookingAppBloc.get(context).hotelsData[i].like!) {
+        BookingAppBloc.get(context).yub = true;
+        BookingAppBloc.get(context).favoritesData.add(BookingAppBloc.get(context).hotelsData[i]);
+      }
+    }
+
     return BlocConsumer<BookingAppBloc, BookingAppState>(
       listener: (context, state) {
         // TODO: implement listener
       },
       builder: (context, state) {
-        return DefaultTabController(
-          length: 3,
-          initialIndex: 0,
-          child: Scaffold(
-            appBar: tripsScreenAppBar(BookingAppBloc()),
-            body: TabBarView(children: BookingAppBloc.get(context).screens),
+        return ConditionalBuilder(
+          condition: BookingAppBloc.get(context).getBookingModelUpcoming != null && BookingAppBloc.get(context).getBookingModelCompleted != null,
+          builder: (context) => DefaultTabController(
+            length: 3,
+            initialIndex: 0,
+            child: Scaffold(
+              appBar: tripsScreenAppBar(BookingAppBloc(),context),
+              body: TabBarView(children: BookingAppBloc.get(context).screens),
+            ),
+          ),
+          fallback: (context) => Center(
+            child: CircularProgressIndicator(
+              color: Colors.greenAccent,
+            ),
           ),
         );
       },
     );
   }
 
-  PreferredSize tripsScreenAppBar(BookingAppBloc cubit) {
+  PreferredSize tripsScreenAppBar(BookingAppBloc cubit , context) {
     return PreferredSize(
-        preferredSize: const Size.fromHeight(135),
+        preferredSize: const Size.fromHeight(140),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -66,8 +84,13 @@ class TripsPage extends StatelessWidget {
                     enableFeedback: true,
                     unselectedLabelColor: ColorManager.grey,
                     labelStyle:
-                    TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     onTap: (index) {
+                      if(index == 0){
+                        // BookingAppBloc.get(context).getBookingCompledted(token: AppStrings.upcomming, count: 10);
+                      }else if(index == 1){
+                        // BookingAppBloc.get(context).getBookingCompledted(token: AppStrings.completed, count: 10);
+                      }
                       cubit.emit(TripChangeTabBarState());
                     },
                     tabs: cubit.tabTitles),
